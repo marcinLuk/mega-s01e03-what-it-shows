@@ -1,8 +1,8 @@
 // The problems #4471 holds once its reports are split by what went wrong. Pages explain it; this file is what runs.
 
-// causes.ts says which cause a report's tenant and channel point to. desk-notes.json lists the reports the desk
-// read as a one-day move: their date lands a day off, not with day and month swapped, so no cause in causes.ts
-// explains them and they get a problem of their own.
+// The desk counts every report where its tenant and channel file it (causes.ts), and footnotes the reports it read
+// differently (desk-notes.json) under that cause. The one-day move is such a reading: the date lands a day off, not
+// with day and month swapped, so it gets a ticket of its own. Its reports stay counted where they are filed too.
 import { CAUSES, causeOf, uniqueById, type Report, type Tenant } from '#lib/kb/causes';
 
 export type Problem = 'parser' | 'hint' | 'one-day';
@@ -15,10 +15,6 @@ export const PROBLEMS: Record<Problem, { what: string; ticket: number }> = {
   hint: { what: 'booking-v3 form prints MM/DD/YYYY under its date field and reads the answer day first', ticket: 2 },
   'one-day': { what: 'the date lands one day off: a time zone or DST shift, not a swap', ticket: 3 },
 };
-
-export function problemOf(r: Report, t: Tenant | undefined, oneDayMove: readonly string[]): Problem | null {
-  return oneDayMove.includes(r.id) ? 'one-day' : causeOf(r, t);
-}
 
 export type ProblemGroup = {
   problem: Problem | 'unplaced';
@@ -35,11 +31,14 @@ export function groupByProblem(
   tenantOf: (r: Report) => Tenant | undefined,
   oneDayMove: readonly string[],
 ): ProblemGroup[] {
+  const unique = uniqueById(reports);
   const byProblem = new Map<ProblemGroup['problem'], Report[]>();
-  for (const r of uniqueById(reports)) {
-    const problem = problemOf(r, tenantOf(r), oneDayMove) ?? 'unplaced';
-    byProblem.set(problem, [...(byProblem.get(problem) ?? []), r]);
+  for (const r of unique) {
+    const cause = causeOf(r, tenantOf(r)) ?? 'unplaced';
+    byProblem.set(cause, [...(byProblem.get(cause) ?? []), r]);
   }
+  const moved = unique.filter((r) => oneDayMove.includes(r.id));
+  if (moved.length) byProblem.set('one-day', moved);
   return [...byProblem.entries()]
     .map(([problem, rs]) => {
       const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();

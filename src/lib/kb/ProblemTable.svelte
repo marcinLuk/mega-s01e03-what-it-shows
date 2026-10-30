@@ -51,6 +51,13 @@
 </table>
 
 {#each groups as g (g.problem)}
+  {@const moved = g.problem === 'one-day' ? 0 : g.reports.filter((r) => notes.oneDayMove.includes(r.id)).length}
+  {#if moved}
+    <p class="note">
+      {moved} <code>{g.problem}</code> reports read as a one-day move: counted here, where the desk files them by tenant,
+      and under <a href="{TICKETS}/{PROBLEMS['one-day'].ticket}">#{PROBLEMS['one-day'].ticket}</a>.
+    </p>
+  {/if}
   {#if g.reports.length <= LIST_UP_TO}
     <p class="note"><code>{g.problem}</code>: {g.reports.map((r) => r.id).join(', ')}</p>
   {/if}
