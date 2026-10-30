@@ -36,8 +36,9 @@ Not one issue. The queued parser fix leaves the booking-v3 form and the one-day 
   and the channel tell them apart. A parser fix does not reach them.
 - **one-day**: the date lands one day off, and not always the same day for everyone ("Client in Lisbon got
   Tuesday. Client in Toronto got Monday."). Nothing is swapped, so neither cause above explains it. The desk
-  already read these reports as a one-day move (`desk-notes.json`); the #4471 page files them under
-  parser.
+  already read these reports as a one-day move (`desk-notes.json`). The desk counts a report where its tenant
+  and channel file it, so these stay counted under parser too, footnoted there; their own ticket tracks the
+  shift.
 
 ## What hid them
 
