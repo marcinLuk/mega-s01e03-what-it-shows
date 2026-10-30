@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../../../_app/immutable/entry/start.BSE4omM1.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/BpNm5qRy.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/W8JXJZ79.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/entry/app.BUYV6hvl.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/xihTtKlq.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/nodes/0.DH-1dZK1.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/nodes/5.1-Mtbz93.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/CjzXTw8X.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/DooIRhXB.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/CVBzP17p.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/Daj6g-V7.js" rel="modulepreload">
+		<!--e2jw2j--><!----><title>#4471 · what the reports show · support kb</title>
+		<link href="../../../../_app/immutable/assets/runbook.COyw0cbZ.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Callout.AbLv9dM_.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/_page.DV1-wVk7.css" rel="stylesheet">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[0--><!--[--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">#4471 · what the reports show</h1> <p class="meta svelte-e2jw2j"><span>owner <b>Marcin Łukaszek</b></span> <span class="status open svelte-e2jw2j">open</span> <span class="svelte-e2jw2j">reviewed 2026-10-30 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p>Ticket #4471 is marked known as one bug: the parser reads dates month first. Read report by report, it
+holds more than one problem, and each needs its own fix. Each problem now has its own ticket, with the
+number of reports it covers.</p> <aside class="warn svelte-17bri61"><!---->Not one issue. The queued parser fix leaves the booking-v3 form and the one-day shift open.<!----></aside><!----> <h2>What #4471 holds</h2> <p class="sum svelte-1op6c6"><strong>412</strong> reports merged into #4471 · <strong>3</strong> problems</p> <p class="note svelte-1op6c6">The export holds 427 rows for #4471; 15 are the same report exported twice and count
+  once. Intake tagged 38 reports with the other cause.</p> <table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody><!--[--><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>parser</code><!--[0--><br/><span class="what svelte-1op6c6">shared parser reads every date month first; day-first tenants get day and month swapped</span><!--]--></td><td class="svelte-1op6c6">374</td><td class="tags svelte-1op6c6">parser ×351 · hint ×23</td><td class="svelte-1op6c6">11</td><td class="svelte-1op6c6">2026-04-01 → 2026-10-04</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/marcinLuk/mega-s01e03-what-it-shows/issues/1">#1</a><!--]--></td></tr><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>hint</code><!--[0--><br/><span class="what svelte-1op6c6">booking-v3 form prints MM/DD/YYYY under its date field and reads the answer day first</span><!--]--></td><td class="svelte-1op6c6">33</td><td class="tags svelte-1op6c6">hint ×18 · parser ×15</td><td class="svelte-1op6c6">3</td><td class="svelte-1op6c6">2026-04-17 → 2026-09-22</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/marcinLuk/mega-s01e03-what-it-shows/issues/2">#2</a><!--]--></td></tr><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>one-day</code><!--[0--><br/><span class="what svelte-1op6c6">the date lands one day off: a time zone or DST shift, not a swap</span><!--]--></td><td class="svelte-1op6c6">5</td><td class="tags svelte-1op6c6">parser ×5</td><td class="svelte-1op6c6">5</td><td class="svelte-1op6c6">2026-04-02 → 2026-10-04</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/marcinLuk/mega-s01e03-what-it-shows/issues/3">#3</a><!--]--></td></tr><!--]--></tbody></table> <!--[--><!--[-1--><!--]--><!--[-1--><!--]--><!--[0--><p class="note svelte-1op6c6"><code>one-day</code>: R-41202, R-41209, R-41236, R-41344, R-41620</p><!--]--><!--]--><!----> <h2>How to tell them apart</h2> <ul><li><strong>parser</strong>: every tenant on file writes the day first, and the shared parser reads month first, so day
+and month come out swapped (“Booked for 2 July. The invite says 7 February.”). This is every report that
+came in through the app or by email, and every form report from a tenant on booking-v2.</li> <li><strong>hint</strong>: form reports from tenants on booking-v3 (Alder Physio, Copper Studio, Pale Harbour). The form
+prints <code>MM/DD/YYYY</code> under its date field, people type the month first as told, and the form reads the
+answer the tenant’s way, day first. The text of these reports looks like a parser report; only the tenant
+and the channel tell them apart. A parser fix does not reach them.</li> <li><strong>one-day</strong>: the date lands one day off, and not always the same day for everyone (“Client in Lisbon got
+Tuesday. Client in Toronto got Monday.”). Nothing is swapped, so neither cause above explains it. The desk
+already read these reports as a one-day move (<code>desk-notes.json</code>); the #4471 page files them under
+parser.</li></ul> <h2>What hid them</h2> <ul><li>Intake tags a report from the reporter’s browser. That is a guess: the problem depends on the tenant and
+the channel. Counting by tag gives the wrong reports in each group.</li> <li>The ticket export repeats some reports. Count by id.</li> <li>Every date report went into one ticket, so one fix looked like enough.</li></ul> <h2>Next</h2> <ul><li>Engineering: fix each ticket on its own. The parser fix closes only the parser ticket.</li> <li>Desk: send new date reports to the matching ticket, by tenant and channel, not by subject or tag.
+The #4471 page still says one issue; read this page before you rely on it.</li></ul> <!--[0--><p class="stamp svelte-1280m42">desk ref <b class="svelte-1280m42">DR-TTPX-3EYZ</b></p><!--]--><!----><!----></main> <footer class="svelte-e2jw2j">Pages are written by people. Tables and charts are built from data at render time.</footer></div><!--]--><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_1dqbidt = {
+						base: new URL("../../../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../../../_app/immutable/entry/start.BSE4omM1.js"),
+						import("../../../../_app/immutable/entry/app.BUYV6hvl.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

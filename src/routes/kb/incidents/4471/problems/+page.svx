@@ -1,0 +1,55 @@
+---
+layout: runbook
+title: '#4471 · what the reports show'
+owner: Marcin Łukaszek
+status: open
+reviewed: 2026-10-30
+signature: 'v1.eyJzdWIiOiI4MDAiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzM3NTczOSwiZXhwIjoxNzkzNDYyMTM5fQ.ko9R_gLLHECa2fRbg1yBrgOHM4sA04ES6344B5tVfNM'
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+Ticket #4471 is marked known as one bug: the parser reads dates month first. Read report by report, it
+holds more than one problem, and each needs its own fix. Each problem now has its own ticket, with the
+number of reports it covers.
+
+<Callout kind="warn">
+Not one issue. The queued parser fix leaves the booking-v3 form and the one-day shift open.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} />
+
+## How to tell them apart
+
+- **parser**: every tenant on file writes the day first, and the shared parser reads month first, so day
+  and month come out swapped ("Booked for 2 July. The invite says 7 February."). This is every report that
+  came in through the app or by email, and every form report from a tenant on booking-v2.
+- **hint**: form reports from tenants on booking-v3 (Alder Physio, Copper Studio, Pale Harbour). The form
+  prints `MM/DD/YYYY` under its date field, people type the month first as told, and the form reads the
+  answer the tenant's way, day first. The text of these reports looks like a parser report; only the tenant
+  and the channel tell them apart. A parser fix does not reach them.
+- **one-day**: the date lands one day off, and not always the same day for everyone ("Client in Lisbon got
+  Tuesday. Client in Toronto got Monday."). Nothing is swapped, so neither cause above explains it. The desk
+  already read these reports as a one-day move (`desk-notes.json`); the #4471 page files them under
+  parser.
+
+## What hid them
+
+- Intake tags a report from the reporter's browser. That is a guess: the problem depends on the tenant and
+  the channel. Counting by tag gives the wrong reports in each group.
+- The ticket export repeats some reports. Count by id.
+- Every date report went into one ticket, so one fix looked like enough.
+
+## Next
+
+- Engineering: fix each ticket on its own. The parser fix closes only the parser ticket.
+- Desk: send new date reports to the matching ticket, by tenant and channel, not by subject or tag.
+  The #4471 page still says one issue; read this page before you rely on it.
+
+<RenderStamp {signature} />
